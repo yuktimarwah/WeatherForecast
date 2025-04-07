@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>10-Day Weather Forecast</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <style>
+        * {
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            background-image: url('https://wallpapercave.com/wp/wp5357380.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        nav {
+            background-color: black;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            list-style-type: none;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        
+           .navbar li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+
+        .navbar li a:hover {
+            background-color: #575757;
+        }
+
+        .search-container {
+            position: absolute;
+            left: 20px;
+            top: 15px;
+            display: inline-block;
+            z-index: 100;
+        }
+
+        .search-input {
+            width: 250px;
+            padding: 10px;
+            border-radius: 25px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+        }
+
+        .search-button {
+            background-color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .search-button i {
+            font-size: 20px;
+            color: #007bff;
+        }
+
+        .search-button:hover i {
+            color: #0056b3;
+        }
+
+        .weather-forecast {
+            margin-top: 450px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            width: 80%;
+            backdrop-filter: blur(20px); 
+        }
+
+        .forecast-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 15px;
+            margin: 10px 0;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .forecast-item:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .date, .day, .temperature, .heading {
+            font-size: 20px;
+        }
+
+        .icon {
+            flex-shrink: 0;
+        }
+
+        .temperature {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .heading {
+            font-size: 50px;
+        }
+
+        .icon img {
+            width: 30px;
+            height: 30px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="navbar">
+            <li><a href="projectfinal.html">Home</a></li>
+            <li><a href="searchfinal.html">Search</a></li>
+            <li><a href="tendayfinal.html">10 Day</a></li>
+            <li><a href="alertsfinal.html">Alerts</a></li>
+            <li><a href="moonfinal.html">Moon Phases</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="city-input" class="search-input" placeholder="Search...">
+            <button class="search-button" id="search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </nav>
+    <div class="weather-forecast" id="weather-forecast">
+        <!-- Weather data will be dynamically inserted here -->
+    </div>
+
+    <script>
+        // Replace with your WeatherAPI key
+        const API_KEY = '3ded8b7ea8bb4e87977154431242211'; // Replace with your WeatherAPI key
+
+        // DOM Elements
+        const searchInput = document.getElementById('city-input');
+        const searchButton = document.getElementById('search-btn');
+        const weatherForecastContainer = document.getElementById('weather-forecast');
+
+        // Fetch weather data for a given city
+        async function fetchWeatherData(city) {
+            const url = `https://api.weatherapi.com/v1/forecast.json?q=${city}&days=10&key=2ded8b7ea8bb4e87977154431242211`;
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('City not found');
+            }
+            return response.json();
+        }
+
+        // Fetch weather data for current location
+        async function fetchWeatherByCoords(lat, lon) {
+            const url = `https://api.weatherapi.com/v1/forecast.json?key=2ded8b7ea8bb4e87977154431242211&q=${lat},${lon}&days=10`;
+            const response = await fetch(url);
+            return response.json();
+        }
+
+        // Render weather data on the page
+        function renderWeather(data) {
+            const filteredData = data.forecast.forecastday;
+
+            weatherForecastContainer.innerHTML = `
+                <div class="forecast-item">
+                    <div class="heading">10-Day Weather Forecast for ${data.location.name}</div>
+                </div>
+                ${filteredData
+                    .map(
+                        (day) => `
+                    <div class="forecast-item">
+                        <div class="date">${new Date(day.date).toLocaleDateString('en-US', {
+                            weekday: 'short',
+                            month: 'short',
+                            day: 'numeric',
+                        })}</div>
+                        <div class="day">${new Date(day.date).toLocaleDateString('en-US', { weekday: 'long' })}</div>
+                        <div class="icon"><img src="${day.day.condition.icon}" alt="${day.day.condition.text}"></div>
+                        <div class="temperature">${Math.round(day.day.maxtemp_c)}° / ${Math.round(day.day.mintemp_c)}°</div>
+                    </div>
+                `).join('')}
+            `;
+        }
+
+        // Get weather for the current location
+        function getWeatherForCurrentLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    async (position) => {
+                        const { latitude, longitude } = position.coords;
+                        try {
+                            const data = await fetchWeatherByCoords(latitude, longitude);
+                            renderWeather(data);
+                        } catch (error) {
+                            alert('Error fetching weather data for your location.');
+                        }
+                    },
+                    () => {
+                        alert('Unable to fetch your location. Please allow location access.');
+                    }
+                );
+            } else {
+                alert('Geolocation is not supported by this browser.');
+            }
+        }
+
+        // Event listener for the search button
+        searchButton.addEventListener('click', async () => {
+            const city = searchInput.value.trim();
+            if (city) {
+                try {
+                    const data = await fetchWeatherData(city);
+                    renderWeather(data);
+                } catch (error) {
+                    alert('City not found. Please try again.');
+                }
+            } else {
+                alert('Please enter a city name.');
+            }
+        });
+
+        // Load weather data for the current location on page load
+        window.addEventListener('load', getWeatherForCurrentLocation);
+    </script>
+</body>
+</html>
