@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyLens - Moon Phases</title>
+    <link rel="stylesheet" href="moon.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+    <nav>
+        <ul class="navbar">
+            <li><a href="project.html">Home</a></li>
+            <li><a href="search.html">Search</a></li>
+            <li><a href="weeklyforecast.html">Weekly Forecast</a></li>
+            <li><a href="alerts.html">Alerts</a></li>
+            <li><a href="moon.html">Moon Phases</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="city-input" class="search-input" placeholder="Search a location...">
+            <button class="search-button" id="search-btn">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </nav>
+    <div class="abc">
+        <div class="moon-data">
+            <h1>Moon Phases</h1>
+            <p>Track the lunar cycle for weather insights!</p>
+
+            <!-- Loading indicator -->
+            <div id="loading" style="display: none;">
+                <p>Loading moon phase data...</p>
+            </div>
+
+            <!-- Current Phase (hidden initially) -->
+            <div class="current-phase" id="current-phase" style="display: none;">
+                <h2>Current Moon Phase: <span id="moon-phase" class="highlight"></span></h2>
+                <p>Date: <span id="moon-date" class="highlight"></span></p>
+                <p>Percentage Illuminated: <span id="percentage-illuminated" class="highlight"></span></p>
+                <p>Moon Age: <span id="moon-age" class="highlight"></span></p>
+                <!-- Image will be displayed here -->
+            </div>
+
+            <!-- City input for fetching moon data -->
+            <div id="moon-data">
+                <!-- Only show this when data is fetched -->
+            </div>
+        </div>
+
+        <h3>Moon Phase Overview</h3>
+        <div class="moon-phases">
+            <!-- Static images and names of moon phases -->
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/42/42545.png" alt="New Moon" />
+                <div class="phase-name">New Moon</div>
+            </div>
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/41/41452.png" alt="Waxing Crescent" />
+                <div class="phase-name">Waxing Crescent</div>
+            </div>
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/42/42558.png" alt="First Quarter" />
+                <div class="phase-name">First Quarter</div>
+            </div>
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/42/42567.png" alt="Waxing Gibbous" />
+                <div class="phase-name">Waxing Gibbous</div>
+            </div>
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/42/42565.png" alt="Full Moon" />
+                <div class="phase-name">Full Moon</div>
+            </div>
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/42/42573.png" alt="Waning Gibbous" />
+                <div class="phase-name">Waning Gibbous</div>
+            </div>
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/42/42560.png" alt="Last Quarter" />
+                <div class="phase-name">Last Quarter</div>
+            </div>
+            <div class="moon-phase">
+                <img src="https://cdn-icons-png.flaticon.com/128/41/41452.png" alt="Waning Crescent" />
+                <div class="phase-name">Waning Crescent</div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const moonDataContainer = document.getElementById('moon-data');
+        const searchBtn = document.getElementById('search-btn');
+        const cityInput = document.getElementById('city-input');
+        const loadingIndicator = document.getElementById('loading');
+        const currentPhaseContainer = document.getElementById('current-phase');
+
+        // OpenWeather API Key
+        const openWeatherApiKey = '24dd442fa784e730a250afd20d761dfd';
+
+        // Map Moon Phases to Image URLs
+        const moonPhaseImages = {
+            "New Moon": "https://cdn-icons-png.flaticon.com/128/42/42545.png",
+            "Waxing Crescent": "https://cdn-icons-png.flaticon.com/128/41/41452.png",
+            "First Quarter": "https://cdn-icons-png.flaticon.com/128/42/42558.png",
+            "Waxing Gibbous": "https://cdn-icons-png.flaticon.com/128/42/42567.png",
+            "Full Moon": "https://cdn-icons-png.flaticon.com/128/42/42565.png",
+            "Waning Gibbous": "https://cdn-icons-png.flaticon.com/128/42/42573.png",
+            "Last Quarter": "https://cdn-icons-png.flaticon.com/128/42/42560.png",
+            "Waning Crescent": "https://cdn-icons-png.flaticon.com/128/41/41452.png"
+        };
+
+        // Fetch Coordinates for City
+        async function fetchCoordinates(city) {
+            const url = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${openWeatherApiKey}`;
+            const response = await fetch(url);
+            const data = await response.json();
+            if (data.length === 0) {
+                throw new Error('City not found');
+            }
+            return { lat: data[0].lat, lon: data[0].lon };
+        }
+
+        // Fetch Moon Phase Data
+        async function fetchMoonData(lat, lon) {
+            const response = await fetch(`https://api.farmsense.net/v1/moonphases/?d=${Date.now()}`);
+            if (!response.ok) {
+                throw new Error('Failed to fetch moon data');
+            }
+            const data = await response.json();
+            return data[0];
+        }
+
+        // Display Moon Data
+        function displayMoonData(data, city) {
+            const { Phase, Illumination, Age } = data;
+            const currentDate = new Date().toLocaleString();
+
+            // Update text data
+            document.getElementById('moon-phase').innerText = Phase;
+            document.getElementById('moon-date').innerText = currentDate;
+            document.getElementById('percentage-illuminated').innerText = `${(Illumination * 100).toFixed(2)}%`;
+            document.getElementById('moon-age').innerText = Age;
+
+            // Update moon phase image
+            const moonImageContainer = document.createElement('div');
+            const moonImage = document.createElement('img');
+            moonImage.src = moonPhaseImages[Phase] || '';
+            moonImage.alt = Phase;
+            moonImage.style.width = '100px';
+            moonImage.style.height = '100px';
+            moonImageContainer.appendChild(moonImage);
+
+            // Append image to the current-phase section
+            currentPhaseContainer.appendChild(moonImageContainer);
+
+            // Show the current-phase section
+            currentPhaseContainer.style.display = 'block';
+        }
+
+        // Handle Search Button Click
+        searchBtn.addEventListener('click', async () => {
+            const city = cityInput.value.trim();
+            if (!city) {
+                moonDataContainer.innerHTML = '<p>Please enter a city name.</p>';
+                return;
+            }
+            try {
+                // Show loading indicator
+                loadingIndicator.style.display = 'block';
+                moonDataContainer.style.display = 'none';
+                currentPhaseContainer.style.display = 'none';
+
+                const { lat, lon } = await fetchCoordinates(city);
+                const moonData = await fetchMoonData(lat, lon);
+                displayMoonData(moonData, city);
+
+                // Hide loading indicator and show moon data
+                loadingIndicator.style.display = 'none';
+                moonDataContainer.style.display = 'block';
+            } catch (error) {
+                moonDataContainer.innerHTML = `<p>Error: ${error.message}</p>`;
+            }
+        });
+    </script>
+</body>
+
+</html>

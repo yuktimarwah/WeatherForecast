@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkyLens</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        /* Your CSS code remains unchanged except for minor cleanup. */
+        * {
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background-image: url(https://www.loc.gov/static/managed-content/uploads/sites/16/2018/09/thunderNOAA2.jpg);
+  
+  background-size: cover;
+  background-position: center;
+}
+
+
+*{
+  
+  padding: 0;
+  box-sizing: border-box;
+}
+
+nav {
+            background-color: black;
+            padding: 10px 0;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar {
+            list-style-type: none;
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .navbar li {
+            display: inline;
+            margin: 0;
+        }
+
+        .navbar li a {
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            background-color: #333;
+            border-radius: 5px;
+        }
+
+        .navbar li a:hover {
+            background-color: #575757;
+        }
+
+        /* Search Button Styles */
+        .search-container {
+            position: absolute;
+            left: 20px; /* Changed to left side */
+            top: 15px;
+            display: inline-block;
+            z-index: 100;
+        }
+
+        .search-input {
+            width: 250px;
+            padding: 10px;
+            border-radius: 25px;
+            font-size: 16px;
+            border: none;
+            outline: none;
+        }
+
+        .search-button {
+            background-color: #fff;
+            border: none;
+            border-radius: 25px;
+            padding: 10px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .search-button i {
+            font-size: 20px;
+            color: #007bff;
+        }
+
+        .search-button:hover i {
+            color: #0056b3;
+        }
+
+
+.search-container {
+  position: absolute;
+  left: 20px; /* Changed to left side */
+  top: 15px;
+  display: inline-block;
+  z-index: 100;
+}
+
+.search-input {
+  width: 250px;
+  padding: 10px;
+  border-radius: 25px;
+  font-size: 16px;
+  border: none;
+  outline: none;
+
+}
+
+.search-button {
+  background-color: #fff;
+  border: none;
+  border-radius: 25px;
+  padding: 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.search-button i {
+  font-size: 20px;
+  color: #007bff;
+}
+
+.search-button:hover i {
+  color: #0056b3;
+}
+
+h1 {
+  text-align: center;
+  color: #fff;
+  margin-top: 100px;
+  font-weight: 40px;
+  font-family: georgia;
+  font-size: 300%;
+}
+
+.alert-container {
+  display: flex;
+  flex-wrap: wrap; /* Allow wrapping to create rows */
+  justify-content: center; /* Center the alerts */
+  gap: 30px; /* Add spacing between alerts */
+  margin: 25px;
+}
+
+.alert {
+  border-radius: 10px;
+  padding: 35px;
+  width: 30%; /* Three alerts per row */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.73);
+  color: white;
+  transition: transform 0.3s; 
+  background: linear-gradient(135deg, #f06, #ff6b6b); 
+}
+
+.alert.warning {
+  background: linear-gradient(135deg, #0a0339, #074f77); 
+}
+
+.alert.info {
+  background: linear-gradient(135deg, #122e6b, #0a7cc8); 
+}
+
+.alert.danger {
+  background: linear-gradient(135deg, #6d140b, #f2a03d); 
+}
+
+.alert.success {
+  background: linear-gradient(135deg, #0b4322, #6dd699); 
+}
+
+.alert.winter-storm {
+  background: linear-gradient(135deg, #026288, #03ced2); /* Gradient for winter storm */
+}
+
+.alert.air-quality {
+  background: linear-gradient(135deg, #55156e, #d1aae2); /* Gradient for air quality */
+}
+
+.alert:hover {
+  transform: scale(1.05); /* Scale up on hover */
+}
+
+.alert i {
+  font-size: 2em;
+  margin-bottom: 10px;
+}
+
+.alert h2 {
+  margin: 10px 0;
+  color: white;
+  font-size: 150%;
+}
+
+.alert p {
+  color: #f5f5f5;
+}
+.icon1{
+  width: 55px;
+  height: 45px;
+  margin-right: 20px;
+  border-radius: 25px;
+}
+    </style>
+</head>
+<body>
+    <nav>
+        <ul class="navbar">
+            <li><a href="projectfinal.html">Home</a></li>
+            <li><a href="searchfinal.html">Search</a></li>
+            <li><a href="tendayfinal.html">10 Day</a></li>
+            <li><a href="alerts.html">Alerts</a></li>
+            <li><a href="moonfinal.html">Moon Phases</a></li>
+        </ul>
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-input" placeholder="Search...">
+            <button class="search-button" onclick="searchCity()">
+                <i class="fas fa-search"></i>
+            </button>
+        </div>
+    </nav>
+    <h1><img src="https://cdn-icons-gif.flaticon.com/17702/17702121.gif" alt="icon1" class="icon1">Weather Alerts</h1>
+    <div class="alert-container">
+        <div class="alert warning">
+            <i class="fas fa-bolt"></i>
+            <h2>Severe Thunderstorm Warning</h2>
+        </div>
+        <div class="alert info">
+            <i class="fas fa-water"></i>
+            <h2>Flood Watch</h2>
+        </div>
+        <div class="alert danger">
+            <i class="fas fa-exclamation-triangle"></i>
+            <h2>Heat Advisory</h2>
+        </div>
+        <div class="alert success">
+            <i class="fas fa-sun"></i>
+            <h2>Weather Update</h2>
+        </div>
+        <div class="alert winter-storm">
+            <i class="fas fa-snowflake"></i>
+            <h2>Winter Storm Warning</h2>
+        </div>
+        <div class="alert air-quality">
+            <i class="fas fa-smog"></i>
+            <h2>Air Quality Alert</h2>
+        </div>
+    </div>
+    <script>
+        // Function to fetch city data and weather alerts
+        async function searchCity() {
+            const apiKey = '24dd442fa784e730a250afd20d761dfd'; // Your OpenWeatherMap API key
+            const cityName = document.getElementById('search-input').value.trim();
+
+            if (!cityName) {
+                alert('Please enter a city name!');
+                return;
+            }
+
+            try {
+                const cityResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`);
+                if (!cityResponse.ok) throw new Error('City not found');
+
+                const cityData = await cityResponse.json();
+                const { lat, lon } = cityData.coord;
+
+                const alertsResponse = await fetch(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${lon}&appid=${apiKey}`);
+                const alertsData = await alertsResponse.json();
+
+                updateAlerts(alertsData.alerts || []);
+            } catch (error) {
+                console.error(error.message);
+                alert('Error fetching weather data. Please try again.');
+            }
+        }
+
+        // Function to update alerts
+        function updateAlerts(alerts) {
+            const defaultHeadings = {
+                'warning': 'Severe Thunderstorm Warning',
+                'info': 'Flood Watch',
+                'danger': 'Heat Advisory',
+                'success': 'Weather Update',
+                'winter-storm': 'Winter Storm Warning',
+                'air-quality': 'Air Quality Alert'
+            };
+
+            const alertContainer = document.querySelectorAll('.alert');
+
+            alertContainer.forEach(alert => {
+                const alertType = alert.classList[1];
+                const heading = defaultHeadings[alertType];
+                alert.querySelector('h2').textContent = heading;
+                alert.querySelector('p')?.remove();
+            });
+
+            if (alerts.length === 0) {
+                alertContainer.forEach(alert => {
+                    const noAlertMessage = document.createElement('p');
+                    noAlertMessage.textContent = 'No alerts for upcoming days.';
+                    alert.appendChild(noAlertMessage);
+                });
+                return;
+            }
+
+            alerts.forEach(alertData => {
+                const currentTime = Math.floor(Date.now() / 1000);
+                if (alertData.start > currentTime) {
+                    const alertType = Object.keys(defaultHeadings).find(key =>
+                        alertData.event.toLowerCase().includes(key)
+                    );
+                    if (alertType) {
+                        const alertElement = document.querySelector(`.alert.${alertType}`);
+                        if (alertElement) {
+                            alertElement.querySelector('h2').textContent = alertData.event;
+                            const description = document.createElement('p');
+                            description.textContent = alertData.description || 'Details not available.';
+                            alertElement.appendChild(description);
+                        }
+                    }
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const alertContainer = document.querySelectorAll('.alert');
+            const defaultHeadings = {
+                'warning': 'Severe Thunderstorm Warning',
+                'info': 'Flood Watch',
+                'danger': 'Heat Advisory',
+                'success': 'Weather Update',
+                'winter-storm': 'Winter Storm Warning',
+                'air-quality': 'Air Quality Alert'
+            };
+
+            alertContainer.forEach(alert => {
+                const alertType = alert.classList[1];
+                alert.querySelector('h2').textContent = defaultHeadings[alertType];
+            });
+        });
+    </script>
+</body>
+</html>
