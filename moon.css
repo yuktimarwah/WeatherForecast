@@ -11,7 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    padding: 20px;
+    padding: 20px; /* padding is 20px */
     text-align: center;
     background-size: cover;
 }
